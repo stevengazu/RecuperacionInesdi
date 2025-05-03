@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Mapea el puerto 3000 del contenedor al puerto 3000 de tu máquina
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/RecuperacionDB # URI de conexión a MongoDB
+    depends_on:
+      - mongo # Asegura que MongoDB esté listo antes de iniciar la app
+    volumes:
+      - .:/app # Mapea el directorio actual al contenedor para desarrollo
+    command: ["node", "app.js"] # Comando para iniciar la aplicación
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - "27017:27017" # Mapea el puerto 27017 del contenedor al puerto 27017 de tu máquina
+    volumes:
+      - mongo-data:/data/db # Persiste los datos de MongoDB
+
+volumes:
+  mongo-data:
